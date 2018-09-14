@@ -23,8 +23,7 @@
 		"async"
 	],
 	"dependencies": {
-		"pify": "^2.3.0",
-		"pinkie-promise": "^2.0.1"
+		"pify": "^2.3.0"
 	},
 	"devDependencies": {
 		"@shinnn/eslint-config": "^6.7.0",
