@@ -1,12 +1,11 @@
 'use strict';
 
+const {promisify} = require('util');
 const {unlink} = require('fs');
-
-const pify = require('pify');
 
 const ARGLEN_ERROR = 'Expected 1 argument (<string>)';
 const ERROR = 'Expected a path of a file or symbolic link (<string>)';
-const promisifiedUnlink = pify(unlink);
+const promisifiedUnlink = promisify(unlink);
 
 module.exports = async function rmf(...args) {
 	const argLen = args.length;
