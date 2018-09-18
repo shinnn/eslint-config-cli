@@ -1,10 +1,11 @@
 'use strict';
 
-const {promisify} = require('util');
+const {types: {isUint8Array}, promisify} = require('util');
 const {unlink} = require('fs');
 
-const ARGLEN_ERROR = 'Expected 1 argument (<string>)';
-const ERROR = 'Expected a path of a file or symbolic link (<string>)';
+const PATH_TYPES = '(<string|Buffer|Uint8Array|URL>)';
+const ARGLEN_ERROR = `Expected 1 argument ${PATH_TYPES}`;
+const ERROR = `Expected a path of a file or symbolic link ${PATH_TYPES}`;
 const promisifiedUnlink = promisify(unlink);
 
 module.exports = async function rmf(...args) {
@@ -28,6 +29,16 @@ module.exports = async function rmf(...args) {
 
 	if (path === '') {
 		throw new Error(`${ERROR}, but got '' (empty string).`);
+	}
+
+	if (path.length === 0) {
+		if (Buffer.isBuffer(path)) {
+			throw new Error(`${ERROR}, but got an empty Buffer.`);
+		}
+
+		if (isUint8Array(path)) {
+			throw new Error(`${ERROR}, but got an empty Uint8Array.`);
+		}
 	}
 
 	try {

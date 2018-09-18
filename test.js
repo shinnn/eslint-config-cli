@@ -3,6 +3,7 @@
 const {join} = require('path');
 const {access, writeFile} = require('fs').promises;
 
+const fileUrl = require('file-url');
 const rmf = require('.');
 const test = require('tape');
 
@@ -37,32 +38,50 @@ test('rmf()', async t => {
 	}
 
 	t.equal(
-		await rmf(join(__dirname, '__this_file_does_not_exist__')),
+		await rmf(Buffer.from(join(__dirname, '__this_file_does_not_exist__'))),
 		false,
 		'should return false when the target does not exist.'
 	);
 
 	t.equal(
-		(await getError(join(__filename, 'file'))).code,
+		(await getError(new URL(fileUrl(join(__filename, 'file'))))).code,
 		'ENOTDIR',
-		'should return false when it tries to remove a directory.'
+		'should throw an error when it tries to remove a directory.'
 	);
 
 	t.equal(
 		(await getError('')).toString(),
-		'Error: Expected a path of a file or symbolic link (<string>), but got \'\' (empty string).',
-		'should return false when it takes an empty path.'
+		'Error: Expected a path of a file or symbolic link (<string|Buffer|Uint8Array|URL>), but got \'\' (empty string).',
+		'should return false when it takes an empty string.'
+	);
+
+	t.equal(
+		(await getError(Buffer.alloc(0))).toString(),
+		'Error: Expected a path of a file or symbolic link (<string|Buffer|Uint8Array|URL>), but got an empty Buffer.',
+		'should return false when it takes an empty Buffer.'
+	);
+
+	t.equal(
+		(await getError(new Uint8Array())).toString(),
+		'Error: Expected a path of a file or symbolic link (<string|Buffer|Uint8Array|URL>), but got an empty Uint8Array.',
+		'should return false when it takes an empty Uint8Array.'
+	);
+
+	t.equal(
+		(await getError(new Int8Array())).code,
+		'ERR_INVALID_ARG_TYPE',
+		'should return false when it takes an invalid path-type value.'
 	);
 
 	t.equal(
 		(await getError()).toString(),
-		'RangeError: Expected 1 argument (<string>), but got no arguments.',
+		'RangeError: Expected 1 argument (<string|Buffer|Uint8Array|URL>), but got no arguments.',
 		'should return false when it takes no arguments.'
 	);
 
 	t.equal(
 		(await getError('a', 'b')).toString(),
-		'RangeError: Expected 1 argument (<string>), but got 2 arguments.',
+		'RangeError: Expected 1 argument (<string|Buffer|Uint8Array|URL>), but got 2 arguments.',
 		'should return false when it takes too many arguments.'
 	);
 
