@@ -56,8 +56,14 @@ test('rmf()', async t => {
 
 	t.equal(
 		(await getError()).toString(),
-		'TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be one of type string, Buffer, or URL. Received type undefined',
+		'RangeError: Expected 1 argument (<string>), but got no arguments.',
 		'should return false when it takes no arguments.'
+	);
+
+	t.equal(
+		(await getError('a', 'b')).toString(),
+		'RangeError: Expected 1 argument (<string>), but got 2 arguments.',
+		'should return false when it takes too many arguments.'
 	);
 
 	t.end();
