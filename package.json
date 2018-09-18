@@ -1,6 +1,6 @@
 {
 	"name": "rmf",
-	"version": "2.0.0-3",
+	"version": "2.0.0-4",
 	"description": "Remove a file or symbolic link without throwing an error when the target does not exist",
 	"repository": "shinnn/rmf",
 	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
