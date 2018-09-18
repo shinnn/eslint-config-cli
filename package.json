@@ -33,10 +33,7 @@
 		"tape": "^4.9.1"
 	},
 	"eslintConfig": {
-		"extends": "@shinnn",
-		"rules": {
-			"promise/prefer-await-to-then": "off"
-		}
+		"extends": "@shinnn"
 	},
 	"nyc": {
 		"extends": "nyc-config-common"
